@@ -1181,17 +1181,16 @@ Connection: close
 <p>Один и тот же <code>client.py</code> запускает каждый пользователь в своём терминале — роль клиента определяется не кодом, а именем, которое вводится первым сообщением. Сервер принимает имя, запоминает участника и пересылает каждое входящее сообщение всем, кроме автора. Выход — команда <code>/quit</code> или закрытие терминала.</p>
 <p>Для одновременной работы с несколькими клиентами каждое подключение обслуживается в отдельном потоке (<code>threading</code>). Участники хранятся в словаре <code>{сокет: имя}</code>, а поскольку словарь разделяется между потоками, все операции с ним защищены блокировкой. Сообщения передаются построчно, поэтому на сервере для чтения используется сокетный файл <code>makefile('r')</code>.</p>
 <h3 id="_9">Сервер</h3>
-<p>??? info "Полный код server.py"
-    ```python
-    import socket
-    import threading</p>
-<pre><code>HOST = '127.0.0.1'
+<pre><code>```python
+import socket
+import threading
+
+HOST = '127.0.0.1'
 PORT = 9097
 
 
 class ChatRoom:
     """Активные участники чата.
-
     Словарь members разделяется между потоками, поэтому все операции
     с ним защищены блокировкой guard.
     """
@@ -1267,11 +1266,11 @@ if __name__ == '__main__':
 ```
 </code></pre>
 <h3 id="_10">Клиент</h3>
-<p>??? info "Полный код client.py"
-    ```python
-    import socket
-    import threading</p>
-<pre><code>SERVER = ('127.0.0.1', 9097)
+<pre><code>```python
+import socket
+import threading
+
+SERVER = ('127.0.0.1', 9097)
 LEAVE_COMMAND = '/quit'
 
 
@@ -1338,18 +1337,18 @@ if __name__ == '__main__':
 <p><code>GET /</code> — сервер отдаёт HTML-страницу с формой и таблицей всех оценок. <code>POST /</code> — сервер разбирает тело формы (<code>discipline=...&amp;grade=...</code>), сохраняет оценку и снова отдаёт страницу. Журнал хранится как <code>{дисциплина: [оценки]}</code> — у каждого предмета одна запись со списком всех его оценок, а не отдельная строка на каждую оценку. Для разбора тела формы написан собственный URL-декодер (<code>+</code> → пробел, <code>%XX</code> → байт), а вставляемые в страницу значения экранируются.</p>
 <p>Соединения обрабатываются в потоках (пул <code>concurrent.futures</code>), чтобы медленный клиент не блокировал остальных. Неизвестный путь — 404, неподдерживаемый метод — 405.</p>
 <h3 id="_12">Сервер</h3>
-<p>??? info "Полный код server.py"
-    ```python
-    import socket
-    from concurrent.futures import ThreadPoolExecutor
-    from html import escape
-    from http import HTTPStatus</p>
-<pre><code>HOST = '127.0.0.1'
+<pre><code>```python
+import socket
+from concurrent.futures import ThreadPoolExecutor
+from html import escape
+from http import HTTPStatus
+
+HOST = '127.0.0.1'
 PORT = 9086
 
 
 def unquote(text):
-    """Декодирует значения формы: '+' -&gt; пробел, '%XX' -&gt; байт (UTF-8)."""
+    """Декодирует значения формы: '+' -&gt; пробел, '%XX' -&gt; байт"""
     decoded = bytearray()
     i = 0
     while i &lt; len(text):
